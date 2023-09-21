@@ -6,3 +6,10 @@ sky:
     database: sky_take_out
     username: prejudices1
     password: 365365dyx
+mybatis:
+  #mapper配置文件
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.sky.entity
+  configuration:
+    #开启驼峰命名
+    map-underscore-to-camel-case: true
