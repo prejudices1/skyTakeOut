@@ -1,7 +1,9 @@
 package com.sky.service.impl;
 
 import com.sky.constant.MessageConstant;
+import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
+import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
@@ -9,12 +11,12 @@ import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
 import com.sky.service.EmployeeService;
+import com.sky.utils.Encrypt;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 
 /**
  * @author Yaoxin Dong
@@ -46,7 +48,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         //密码比对
-        password=sha256(password);
+        password= Encrypt.sha256(password);
         if (!password.equals(employee.getPassword())) {
             //密码错误
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
@@ -60,25 +62,30 @@ public class EmployeeServiceImpl implements EmployeeService {
         //3、返回实体对象
         return employee;
     }
-    public static String sha256(String text) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(text.getBytes(StandardCharsets.UTF_8));
 
-            // Convert byte array to hex string
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : hash) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) {
-                    hexString.append('0');
-                }
-                hexString.append(hex);
-            }
 
-            return hexString.toString();
+    /**
+     * 新增员工
+     * @Param employeeDTO
+     * */
+    @Override
+    public void save(EmployeeDTO employeeDTO){
+        Employee employee = new Employee();
+        //对象属性拷贝
+        BeanUtils.copyProperties(employeeDTO,employee);
+        //设置账号状态
+        employee.setStatus(StatusConstant.DISABLE);
+        //设置密码
+        employee.setPassword(Encrypt.sha256(PasswordConstant.DEFAULT_PASSWORD));
+        //设置创建时间和修改时间
+        employee.setCreateTime(LocalDateTime.now());
+        employee.setUpdateTime(LocalDateTime.now());
+        //当前创建人和修改人
+        //TODO 后期改为当前用户id
+        employee.setCreateUser(10L);
+        employee.setUpdateUser(10L);
 
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+        employeeMapper.insert(employee);
     }
+
 }
