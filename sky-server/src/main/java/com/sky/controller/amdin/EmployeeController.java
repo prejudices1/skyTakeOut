@@ -1,4 +1,4 @@
-package com.sky.controller.admin;
+package com.sky.controller.amdin;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
