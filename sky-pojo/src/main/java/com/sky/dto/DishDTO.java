@@ -2,11 +2,16 @@ package com.sky.dto;
 
 import com.sky.entity.DishFlavor;
 import lombok.Data;
+import lombok.Getter;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Yaoxin Dong
+ */
 @Data
 public class DishDTO implements Serializable {
 
@@ -14,6 +19,7 @@ public class DishDTO implements Serializable {
     //菜品名称
     private String name;
     //菜品分类id
+    @Getter
     private Long categoryId;
     //菜品价格
     private BigDecimal price;
@@ -26,4 +32,7 @@ public class DishDTO implements Serializable {
     //口味
     private List<DishFlavor> flavors = new ArrayList<>();
 
+    public Long getCategoryId() {
+        return categoryId;
+    }
 }
