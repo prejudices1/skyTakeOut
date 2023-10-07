@@ -11,4 +11,8 @@ sky:
     port: 6379
 #    password: 123456
     database: 10
-
+  alioss:
+    endpoint: oss-cn-beijing.aliyuncs.com
+    access-key-id: LTAI5t9gd3eP3Gf3jrJBKA2T
+    access-key-secret: RxzgfzDu2r3gcseneI1xSuciqEHG7r
+    bucket-name: dyxbucket
